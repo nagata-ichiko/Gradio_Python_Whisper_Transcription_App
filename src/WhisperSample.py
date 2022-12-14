@@ -2,7 +2,7 @@ from multiprocessing.sharedctypes import Value
 import whisper
 import gradio as gr 
 
-model = whisper.load_model("base")
+model = whisper.load_model("large")
 
 def speechRecognitionModel(input): 
     # 30秒データに変換
@@ -28,9 +28,9 @@ gr.Interface(
     fn=speechRecognitionModel, 
     inputs=[
         # 音声ファイル
-        gr.Audio(type="filepath")
+        # gr.Audio(type="filepath")
         # 動画ファイル
-        # gr.Video(type="filepath")
+        gr.Video(type="filepath")
         # マイク入力
         # gr.inputs.Audio(source="microphone", type="filepath")        
     ],
