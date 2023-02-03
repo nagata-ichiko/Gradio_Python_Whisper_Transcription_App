@@ -25,6 +25,6 @@ pip3 install git+https://github.com/openai/whisper.git
 
 4.足りないパッケージなどあればインストール
 
-5.WhisperSample.py を実行
+5. TranscriptionGradioWhisper.pyを実行
 
 読み込んだ動画から文字を起こし、CSV 形式で出力します。
