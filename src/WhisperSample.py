@@ -5,7 +5,12 @@ from datetime import timedelta
 from srt import Subtitle
 import srt
 
-model = whisper.load_model("large")
+# モデル選択、下に行くほどデカくて遅いが高精度
+# model = whisper.load_model("tiny")
+# model = whisper.load_model("base")
+model = whisper.load_model("small")
+# model = whisper.load_model("medium")
+# model = whisper.load_model("large")
 
 def speechRecognitionModel(input): 
     # 30秒データに変換

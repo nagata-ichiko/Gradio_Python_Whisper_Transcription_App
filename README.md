@@ -1,20 +1,29 @@
 # Whisper_Sample
-Whisperを使用した文字起こしサンプルアプリです。
+
+Whisper を使用した文字起こしサンプルアプリです。
 
 # 実行環境
 
-1.Gradioインストール
+1.Gradio インストール
 
+```
 pip3 install gradio
+```
 
-2.FFmpegインストール
+2.FFmpeg インストール
 
+```
 brew install ffmpeg
+```
 
-3.Whisperインストール
+3.Whisper インストール
 
+```
 pip3 install git+https://github.com/openai/whisper.git
+```
 
 4.足りないパッケージなどあればインストール
 
-5.実行
+5.WhisperSample.py を実行
+
+読み込んだ動画から文字を起こし、CSV 形式で出力します。
