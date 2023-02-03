@@ -1,6 +1,7 @@
-# Whisper_Sample
+# Gradio_Python_Whisper_Transcription_App
 
-Whisper を使用した文字起こしサンプルアプリです。
+
+GradioとWhisper を使用した文字起こしサンプルアプリです。
 
 # 実行環境
 
