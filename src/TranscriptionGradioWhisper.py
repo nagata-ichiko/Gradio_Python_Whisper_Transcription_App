@@ -1,4 +1,6 @@
 from multiprocessing.sharedctypes import Value
+from faster_whisper import WhisperModel
+model_path = "whisper-large-v2-ct2/"
 import whisper
 import gradio as gr 
 from datetime import timedelta
@@ -8,9 +10,13 @@ import srt
 # モデル選択、下に行くほどデカくて遅いが高精度
 # model = whisper.load_model("tiny")
 # model = whisper.load_model("base")
-model = whisper.load_model("small")
+# model = whisper.load_model("small")
 # model = whisper.load_model("medium")
 # model = whisper.load_model("large")
+
+# 高速モデル https://github.com/guillaumekln/faster-whisper
+# ct2-transformers-converter --model openai/whisper-large-v2 --output_dir whisper-large-v2-ct2 実行
+model = WhisperModel(model_path, device="cpu", compute_type="int8")
 
 def speechRecognitionModel(input): 
     # 30秒データに変換
@@ -26,8 +32,14 @@ def speechRecognitionModel(input):
     # options = whisper.DecodingOptions(fp16=False)
     # result = whisper.decode(model, mel, options)
     
-    #　時間制限なし、しかし画面表示が行われない
-    result = model.transcribe(input, verbose=True, language="ja")
+    
+    # segments, _ = model.transcribe(input, word_timestamps=True)
+
+    # for segment in segments:
+    #     for word in segment.words:
+    #         print("[%.2fs -> %.2fs] %s" % (word.start, word.end, word.word))
+    
+    result = model.transcribe(input, language="ja")
     
     seginfo = result["segments"]
     out_text = []
@@ -54,6 +66,7 @@ def speechRecognitionModel(input):
         f.write(origin)
     
     return result
+    # return ""
 
 gr.Interface(
     title = 'Whisper Sample App', 
