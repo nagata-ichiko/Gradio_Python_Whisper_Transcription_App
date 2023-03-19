@@ -33,7 +33,7 @@ def speechRecognitionModel(input):
     # result = whisper.decode(model, mel, options)
     
     
-    # segments, _ = model.transcribe(input, word_timestamps=True)
+    segments, _ = model.transcribe(input, word_timestamps=True)
 
     # for segment in segments:
     #     for word in segment.words:
@@ -41,14 +41,15 @@ def speechRecognitionModel(input):
     
     result = model.transcribe(input, language="ja")
     
-    seginfo = result["segments"]
+    # seginfo = result["segments"]
+    seginfo = result
     out_text = []
 
     # segment情報から発言の開始/終了時間とテキストを抜き出し、srt形式で編集する
-    for data in seginfo:
-        start = data["start"]
-        end = data["end"]
-        text = data["text"]
+    for segment in seginfo:
+        start = segment.start
+        end = segment.end
+        text = segment.text
         out_line = Subtitle(index=1,\
                             start=timedelta(seconds=timedelta(seconds=start).seconds,\
                             microseconds=timedelta(seconds=start).microseconds),\
