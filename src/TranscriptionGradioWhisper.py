@@ -8,9 +8,10 @@ import srt
 # モデル選択、下に行くほどデカくて遅いが高精度
 # model = whisper.load_model("tiny")
 # model = whisper.load_model("base")
-model = whisper.load_model("small")
+# model = whisper.load_model("small")
 # model = whisper.load_model("medium")
 # model = whisper.load_model("large")
+model = whisper.load_model("large-v2")
 
 def speechRecognitionModel(input): 
     # 30秒データに変換
