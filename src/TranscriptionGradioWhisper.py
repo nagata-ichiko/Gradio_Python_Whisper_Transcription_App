@@ -9,7 +9,9 @@ import srt
 
 # ct2-transformers-converter --model openai/whisper-large-v2 --output_dir whisper-large-v2-ct2 実行
 # 高速モデル https://github.com/guillaumekln/faster-whisper
-model = WhisperModel(model_path, device="auto", compute_type="float16")
+# driverいるかもhttps://teratail.com/questions/344120
+# https://www.kkaneko.jp/tools/win/cuda110.html#S3
+model = WhisperModel(model_path, device="cpu", compute_type="int8")
 
 def speechRecognitionModel(input):     
     segments, _ = model.transcribe(input, beam_size=2, word_timestamps=False)    
@@ -17,6 +19,7 @@ def speechRecognitionModel(input):
 
     # segment情報から発言の開始/終了時間とテキストを抜き出し、srt形式で編集する
     for segment in segments:
+        print("[%.2fs -> %.2fs] %s" % (segment.start, segment.end, segment.text))
         start = segment.start
         end = segment.end
         text = segment.text
