@@ -1,17 +1,54 @@
 from multiprocessing.sharedctypes import Value
 from faster_whisper import WhisperModel
-model_path = "whisper-large-v2-ct2/"
+import ctranslate2
+model_path = "whisper-large-v2-ct2"
 import whisper
 import gradio as gr 
 from datetime import timedelta
 from srt import Subtitle
 import srt
-
+import requests
+import os
+from tqdm import tqdm
 # ct2-transformers-converter --model openai/whisper-large-v2 --output_dir whisper-large-v2-ct2 実行
 # 高速モデル https://github.com/guillaumekln/faster-whisper
 # driverいるかもhttps://teratail.com/questions/344120
 # https://www.kkaneko.jp/tools/win/cuda110.html#S3
-model = WhisperModel(model_path, device="cpu", compute_type="int8")
+
+def modelset():
+    filepath = "model/"
+    filename = "large-v2.pt"
+    
+    if os.path.exists(path=filepath+filename) == False:    
+        # モデルダウンロード
+        print("download model")
+        url = "https://openaipublic.azureedge.net/main/whisper/models/81f7c96c852ee8fc832187b0132e569d6c3065a3252ed18e56effd0b6a73e524/large-v2.pt"
+        file_size = int(requests.head(url).headers["Content-Length"])
+        res = requests.get(url, stream=True)
+        
+        os.makedirs("model/", exist_ok=True)
+        
+        pbar = tqdm(total=file_size, unit="B", unit_scale=True)
+        with open(filepath+filename, 'wb') as file:
+            for chunk in res.iter_content(chunk_size=1024):
+                file.write(chunk)
+                pbar.update(len(chunk))
+            pbar.close()
+            
+    
+    # if os.path.exists(path=filepath+filename) != False:        
+    # モデル変換
+    print("convert model")
+    
+    ctranslate2._ini
+    
+    ct2 = ctranslate2.Translator("model/large-v2.pt",device="cpu")
+
+    ct2.converters.Converter().convert(output_dir="whisper-large-v2-ct2", quantization="int16", force=True, vmap="whisper-large-v2-ct2/vocab.txt")
+    model = WhisperModel(model_path, device="cpu", compute_type="int8")
+
+
+
 
 def speechRecognitionModel(input):     
     segments, _ = model.transcribe(input, beam_size=2, word_timestamps=False)    
@@ -41,6 +78,7 @@ def speechRecognitionModel(input):
     
     return result
 
+modelset()
 gr.Interface(
     title = 'Whisper Sample App', 
     fn=speechRecognitionModel, 

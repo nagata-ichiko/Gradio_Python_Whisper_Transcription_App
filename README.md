@@ -30,6 +30,9 @@ pip3 install git+https://github.com/openai/whisper.git
 
 ---
 
+Faster 手順
+https://github.com/guillaumekln/faster-whisper
+
 whisper 更新
 
 ```
