@@ -39,10 +39,15 @@ def modelset():
     # if os.path.exists(path=filepath+filename) != False:        
     # モデル変換
     print("convert model")
-    os.makedirs("convertmodel/", exist_ok=True)
-    converter =  ctranslate2.converters.transformers.TransformersConverter(model_name_or_path=filepath+filename)
-    converter.load_model(model_class, model_name_or_path)
-    converter.convert(output_dir="convertmodel", quantization="int8", force=True, vmap="convertmodel/vocab.txt")
+    
+    ctranslate2._ini
+    
+    ct2 = ctranslate2.Translator("model/large-v2.pt",device="cpu")
+
+    ct2.converters.Converter().convert(output_dir="whisper-large-v2-ct2", quantization="int16", force=True, vmap="whisper-large-v2-ct2/vocab.txt")
+    model = WhisperModel(model_path, device="cpu", compute_type="int8")
+
+
 
 
 def speechRecognitionModel(input):     
