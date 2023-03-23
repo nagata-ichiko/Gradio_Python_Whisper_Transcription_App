@@ -1,13 +1,11 @@
 from multiprocessing.sharedctypes import Value
-from faster_whisper import WhisperModel
-model_path = "whisper-large-v2-ct2/"
 import whisper
 import gradio as gr 
 from datetime import timedelta
 from srt import Subtitle
 import srt
 
-# ct2-transformers-converter --model openai/whisper-large-v2 --output_dir whisper-large-v2-ct2 \ --copy_files tokenizer.json --quantization float16 実行
+# ct2-ratnsformers-converter --model openai/whisper-large-v2 --output_dir whisper-large-v2-ct2 \ --copy_files tokenizer.json --quantization float16 実行
 # 高速モデル https://github.com/guillaumekln/faster-whisper
 # driverいるかもhttps://teratail.com/questions/344120
 # https://www.kkaneko.jp/tools/win/cuda110.html#S3
@@ -23,6 +21,7 @@ def speechRecognitionModel(input):
         start = segment.start
         end = segment.end
         text = segment.text
+
         out_line = Subtitle(index=1,\
                             start=timedelta(seconds=timedelta(seconds=start).seconds,\
                             microseconds=timedelta(seconds=start).microseconds),\
