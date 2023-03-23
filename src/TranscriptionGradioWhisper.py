@@ -5,39 +5,23 @@ from datetime import timedelta
 from srt import Subtitle
 import srt
 
-# モデル選択、下に行くほどデカくて遅いが高精度
-# model = whisper.load_model("tiny")
-# model = whisper.load_model("base")
-# model = whisper.load_model("small")
-# model = whisper.load_model("medium")
-# model = whisper.load_model("large")
-model = whisper.load_model("large-v2")
+# ct2-ratnsformers-converter --model openai/whisper-large-v2 --output_dir whisper-large-v2-ct2 \ --copy_files tokenizer.json --quantization float16 実行
+# 高速モデル https://github.com/guillaumekln/faster-whisper
+# driverいるかもhttps://teratail.com/questions/344120
+# https://www.kkaneko.jp/tools/win/cuda110.html#S3
+model = WhisperModel(model_path, device="cpu", compute_type="int8")
 
-def speechRecognitionModel(input): 
-    # 30秒データに変換
-    # audio = whisper.load_audio(input)
-    # audio = whisper.pad_or_trim(audio)
-
-    # mel = whisper.log_mel_spectrogram(audio).to(model.device)
-
-    # _, probs = model.detect_language(mel)
-    # print(f"言語: {max(probs, key=probs.get)}")
-
-    # # 文字起こし
-    # options = whisper.DecodingOptions(fp16=False)
-    # result = whisper.decode(model, mel, options)
-    
-    #　時間制限なし、しかし画面表示が行われない
-    result = model.transcribe(input, verbose=True, language="ja")
-    
-    seginfo = result["segments"]
+def speechRecognitionModel(input):     
+    segments, _ = model.transcribe(input,language="ja", beam_size=2, word_timestamps=False)    
     out_text = []
 
     # segment情報から発言の開始/終了時間とテキストを抜き出し、srt形式で編集する
-    for data in seginfo:
-        start = data["start"]
-        end = data["end"]
-        text = data["text"]
+    for segment in segments:
+        print("[%.2fs -> %.2fs] %s" % (segment.start, segment.end, segment.text))
+        start = segment.start
+        end = segment.end
+        text = segment.text
+
         out_line = Subtitle(index=1,\
                             start=timedelta(seconds=timedelta(seconds=start).seconds,\
                             microseconds=timedelta(seconds=start).microseconds),\
